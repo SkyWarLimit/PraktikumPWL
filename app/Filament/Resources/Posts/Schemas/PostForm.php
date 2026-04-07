@@ -32,15 +32,25 @@ class PostForm
             ->schema([
                 Group::make([
                 TextInput::make('title')
-                    ->required()
-                    ->minLength(5),
+                    ->rules('required | min:3')
+                    ->validationMessages([
+                        'required' => 'Judul harus diisi.',
+                        ]),
                 TextInput::make('slug')
-                    ->required()
-                    ->unique(table: 'posts', ignoreRecord: true),
+                    ->rules('required')
+                    ->unique()
+                    ->minLength(3)
+                    ->validationMessages([
+                        'unique' => 'Slug harus unik dan tidak boleh sama.',
+                    ]),
                 Select::make('category_id')
                     ->relationship('category', 'name')
+                    ->required()
                     ->preload()
-                    ->searchable(),
+                    ->searchable()
+                    ->validationMessages([
+                        'required' => 'Kategori harus dipilih.',
+                    ]),
                 ColorPicker::make('color'),
                             ])->columns(2),
 
@@ -55,7 +65,8 @@ class PostForm
                 ->schema([
                     FileUpload::make("image")
                         ->disk('public')
-                        ->directory('Posts'),
+                        ->directory('Posts')
+                        ->required(),
                 ]),
                 ])->columnSpan(2),
 
