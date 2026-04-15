@@ -26,8 +26,9 @@ class ProductsTable
                     ->label('Status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        '1' => 'success', // Hijau jika aktif [cite: 84]
-                        '0' => 'danger',  // Merah jika tidak aktif
+                        '1' => 'success',
+                        '0' => 'danger',
+                        default => 'gray',
                     })
                     ->formatStateUsing(fn (string $state): string => $state === '1' ? 'Active' : 'Inactive'),
             ])

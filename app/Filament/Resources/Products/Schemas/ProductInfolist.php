@@ -7,6 +7,8 @@ use Filament\Schemas\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\IconEntry;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
 
 
@@ -16,14 +18,20 @@ class ProductInfolist
     {
         return $schema
             ->components([
-                Section::make('Product Info')
+                
+            Tabs::make('Product Tabs')
+                ->tabs([
+                Tab::make('Product Details')
+                    ->icon('heroicon-o-information-circle')
                     ->schema([
                         TextEntry::make('name')
                         ->label('Product Name')
                         ->weight('bold')
                         ->color('primary'),
+
                         TextEntry::make('id')
                         ->label('Product ID'),
+
                         TextEntry::make('sku')
                         ->label('Product SKU')
                         ->badge()
@@ -33,25 +41,24 @@ class ProductInfolist
                         TextEntry::make('created_at')
                         ->label('Product Created At')
                         ->date('d M Y')
-                        ->color('info'), 
-                    ])->columnSpanFull(), 
+                        ->color('info'),
+                    ]),
 
-                Section::make('Product Price and Stock')
-                    ->description('')
+                Tab::make('Product Price and Stock')
+                    ->icon('heroicon-o-currency-dollar')
                     ->schema([
                         TextEntry::make('price')
                         ->label('Product Price')
                         ->weight('bold')
-                        ->color('primary')
                         ->icon('heroicon-s-currency-dollar')
-                        ->formatStateUsing(fn (string $state): string => 'Rp' . number_format($state, 0, ',', '.')),
+                        ->badge(fn ($record) => $record->stock)
+                        ->color(fn ($record) => $record->stock < 5 ? 'danger' : 'success'), // Merah jika < 5, Hijau jika cukup [cite: 677, 658]                        ->formatStateUsing(fn (string $state): string => 'Rp' . number_format($state, 0, ',', '.')),
                         TextEntry::make('stock')
                         ->label('Product Stock')
                         ->icon('heroicon-o-cube'),
-                    ])->columnSpanFull(),
-
-                Section::make('Image and Status')
-                    ->description('')
+                    ]),
+                Tab::make('Image and Status')
+                    ->icon('heroicon-o-photo')
                     ->schema([
                         ImageEntry::make('image')
                             ->label('Product Image')
@@ -61,6 +68,7 @@ class ProductInfolist
                         ->weight('bold')
                         ->color('primary')
                         ->icon('heroicon-s-currency-dollar')
+                        ->badge(fn ($record) => $record->stock)
                         ->formatStateUsing(fn (string $state): string => 'Rp' . number_format($state, 0, ',', '.')),
                         TextEntry::make('stock')
                         ->label('Product Stock')
@@ -72,7 +80,9 @@ class ProductInfolist
                         IconEntry::make('is_featured')
                             ->label('Is Featured')
                             ->boolean(),
-                    ]) ->columnSpanFull(),
+                        ])
+                    ]) ->columnSpanFull()
+                    ->vertical(),
             ]); 
     }
 }
