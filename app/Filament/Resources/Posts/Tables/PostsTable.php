@@ -20,15 +20,20 @@ class PostsTable
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->toggleable(),
                 TextColumn::make('title')
                 ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true)
                 ->searchable(),
                 TextColumn::make('slug')
                 ->sortable()
+                ->toggleable()
                 ->searchable(),
                 TextColumn::make('category.name')
                 ->sortable()
+                ->toggleable()
                 ->searchable(),
                 ColorColumn::make('color')
                     ->sortable()
@@ -41,11 +46,15 @@ class PostsTable
                     ->boolean()
                     ->label('Published')
                     ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->label('Created At')
                     ->dateTime()
-                    ->sortable(),  
+                    ->sortable(),
+                TextColumn::make('tags')
+                    ->label('Tags')
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])-> defaultSort('created_at', 'desc')
             ->filters([
                 Filter::make('created_at')
