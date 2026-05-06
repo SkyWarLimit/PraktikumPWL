@@ -79,7 +79,11 @@ class PostForm
                 // -> icon(Heroicon::InformationCircle)
                 -> icon('heroicon-o-information-circle')
                 ->schema([
-                    TagsInput::make('tags'),
+                    // TagsInput::make('tags'),
+                    Select::make('tags')
+                    ->relationship('tags', 'name')
+                    ->multiple()
+                    ->preload(),
                     Checkbox::make('published'),
                     DateTimePicker::make('published_at'),
                     ]),
