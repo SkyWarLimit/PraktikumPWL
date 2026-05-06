@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Posts\Schemas;
 
+use App\Models\Category;
 use Dom\Text;
 use Filament\Schemas\Schema;
 use Filament\Forms\Components\TextInput;
@@ -45,8 +46,9 @@ class PostForm
                     ]),
                 Select::make('category_id')
                     ->relationship('category', 'name')
+                    ->options(Category::all()->pluck('name', 'id'))
                     ->required()
-                    ->preload()
+                    // ->preload()
                     ->searchable()
                     ->validationMessages([
                         'required' => 'Kategori harus dipilih.',
